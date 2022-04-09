@@ -7,8 +7,8 @@ export function Sketch_3() {
   const [speed, setSpeed] = useState<number>(10);
   const [isReversed, setIsReversed] = useState<boolean>(false);
   const SAMPLE_PATH = "/snare.wav";
-
   const BUFFER_SIZE = 1024;
+  const scriptProcessor = ctx.createScriptProcessor(BUFFER_SIZE, 1, 1);
 
   useEffect(() => {
     const f = async () => {
@@ -36,7 +36,6 @@ export function Sketch_3() {
     audioData = [];
     const src = new AudioBufferSourceNode(ctx, { buffer: sound });
     //add
-    const scriptProcessor = ctx.createScriptProcessor(BUFFER_SIZE, 1, 1);
     src.connect(scriptProcessor);
     scriptProcessor.onaudioprocess = onAudioProcess;
     scriptProcessor.connect(ctx.destination);
@@ -44,6 +43,9 @@ export function Sketch_3() {
     src.connect(ctx.destination);
     src.playbackRate.value = speed * 0.1;
     src.start();
+    src.onended = () => {
+      scriptProcessor.disconnect();
+    };
   };
 
   const handleClick = () => {
@@ -76,8 +78,7 @@ export function Sketch_3() {
     return buf;
   }
 
-  const test = () => {
-    const audioBufferSourceNode = ctx.createBufferSource();
+  const playRecord = () => {
     console.log("audioData:", audioData);
 
     const buf = ctx.createBuffer(
@@ -92,6 +93,7 @@ export function Sketch_3() {
       }
     }
 
+    const audioBufferSourceNode = ctx.createBufferSource();
     audioBufferSourceNode.buffer = buf;
 
     audioBufferSourceNode.connect(ctx.destination);
@@ -111,8 +113,8 @@ export function Sketch_3() {
       />
       <p>{speed / 10}</p>
       <button onClick={handleClick}>snare</button>
-      <button onClick={recordPlay}>record play</button>
-      <button onClick={test}>test</button>
+      <button onClick={recordPlay}>record</button>
+      <button onClick={playRecord}>play record</button>
       <p>
         Reverse
         <input onChange={handleReverseClick} type="checkbox" />
