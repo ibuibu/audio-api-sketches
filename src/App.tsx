@@ -1,7 +1,8 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Top } from './Top';
 import { Sketch_1 } from './Sketch_1';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Sketch_2 } from './Sketch_2';
+import { Sketch_3 } from './Sketch_3';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <Route path="/" element={<Top />} />
           <Route path="/1" element={<Sketch_1 />} />
           <Route path="/2" element={<Sketch_2 />} />
+          <Route path="/3" element={<Sketch_3 />} />
         </Routes>
       </Router>
     </>
