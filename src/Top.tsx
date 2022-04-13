@@ -12,6 +12,7 @@ export function Top() {
           </div>
         );
       })}
+            <Link to={"page-sampler"}>PageSampler</Link>
     </>
   );
 }
