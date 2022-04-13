@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 export function Top() {
-  const nums = [...Array(5).keys()].map((i) => i + 1);
+  const nums = [...Array(6).keys()].map((i) => i + 1);
 
   return (
     <>

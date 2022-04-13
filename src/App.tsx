@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Top } from './Top';
-import { Sketch_1 } from './Sketch_1';
-import { Sketch_2 } from './Sketch_2';
-import { Sketch_3 } from './Sketch_3';
-import { Sketch_4 } from './Sketch_4';
-import { Sketch_5 } from './Sketch_5';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Top } from "./Top";
+import { Sketch_1 } from "./Sketch_1";
+import { Sketch_2 } from "./Sketch_2";
+import { Sketch_3 } from "./Sketch_3";
+import { Sketch_4 } from "./Sketch_4";
+import { Sketch_5 } from "./Sketch_5";
+import { Sketch_6 } from "./Sketch_6";
 
 function App() {
   return (
