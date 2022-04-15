@@ -5,10 +5,11 @@ type PropsSampler = {
   char: string;
   soundFilePath: string;
   setFuncObj: React.SetStateAction<any>;
+  gainNode: GainNode;
 };
 
 export const Sampler = (props: PropsSampler) => {
-  const { ctx, char, soundFilePath, setFuncObj } = props;
+  const { ctx, char, soundFilePath, setFuncObj, gainNode } = props;
 
   const [sound, setSound] = useState<AudioBuffer>();
 
@@ -24,6 +25,7 @@ export const Sampler = (props: PropsSampler) => {
   const play = (sound: AudioBuffer) => {
     const src = new AudioBufferSourceNode(ctx, { buffer: sound });
     src.connect(ctx.destination);
+    src.connect(gainNode);
     src.start();
   };
 

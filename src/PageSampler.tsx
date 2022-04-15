@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
+import { Recorder } from "./Recorder";
 import { Sampler } from "./Sampler";
 
-export function PageSampler() {
+type PageSamplerProps = {
+  ctx: AudioContext;
+  recorder: Recorder;
+};
+
+export function PageSampler(props: PageSamplerProps) {
+  const { ctx, recorder } = props;
+
+  console.log("render");
   const [funcObj_0, setFuncObj_0] = useState<{ fn: () => void }>({
     fn: () => {},
   });
@@ -47,8 +56,6 @@ export function PageSampler() {
     return props;
   });
 
-  const ctx = new AudioContext();
-
   useEffect(
     () => {
       window.onkeydown = (e) => {
@@ -64,12 +71,36 @@ export function PageSampler() {
     })
   );
 
+  const record = () => {
+    recorder.record();
+  };
+
+  const play = () => {
+    recorder.play();
+  };
+
+  const stop = () => {
+    recorder.stop();
+  };
+
   return (
     <>
       <h1>Sampler</h1>
-      {samplerProps.map((sp, i) => {
-        return <Sampler key={i} ctx={ctx} {...sp} />;
-      })}
+      <canvas width="1000" height="300">
+        canvas
+      </canvas>
+      <div>
+        <button onClick={record}>record</button>
+        <button onClick={stop}>stop</button>
+        <button onClick={play}>play</button>
+      </div>
+      <div>
+        {samplerProps.map((sp, i) => {
+          return (
+            <Sampler key={i} ctx={ctx} {...sp} gainNode={recorder.gainNode} />
+          );
+        })}
+      </div>
     </>
   );
 }
