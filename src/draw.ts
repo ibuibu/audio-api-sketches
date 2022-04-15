@@ -44,15 +44,15 @@ export function clearCanvas(canvas: HTMLCanvasElement) {
 }
 
 function drawFromChannel(canvas: HTMLCanvasElement, channel: Float32Array) {
-  const peaks = getPeaks(channel, 1000);
+  const peaks = getPeaks(channel, canvas.width - 10); // buffer
 
   const c = canvas.getContext("2d");
   if (c == null) return;
   c.clearRect(0, 0, canvas.width, canvas.height);
   c.fillStyle = "black";
   for (let i = 0; i < peaks.length; i++) {
-    c.fillRect(i, 150, 1, peaks[i] * 100);
-    c.fillRect(i, 150, 1, peaks[i] * -100);
+    c.fillRect(i, canvas.height / 2, 1, (peaks[i] * canvas.height) / 2.1); // buffer
+    c.fillRect(i, canvas.height / 2, 1, (peaks[i] * -canvas.height) / 2.1);
   }
 }
 
