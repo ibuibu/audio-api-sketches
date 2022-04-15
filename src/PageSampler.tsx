@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { Recorder } from "./Recorder";
 import { Sampler } from "./Sampler";
 
 type PageSamplerProps = {
   ctx: AudioContext;
-  recorder: Recorder;
+  gainNode: GainNode;
 };
 
 export function PageSampler(props: PageSamplerProps) {
-  const { ctx, recorder } = props;
+  const { ctx, gainNode } = props;
 
   console.log("render");
   const [funcObj_0, setFuncObj_0] = useState<{ fn: () => void }>({
@@ -71,33 +70,12 @@ export function PageSampler(props: PageSamplerProps) {
     })
   );
 
-  const record = () => {
-    recorder.record();
-  };
-
-  const play = () => {
-    recorder.play();
-  };
-
-  const stop = () => {
-    recorder.stop();
-  };
-
   return (
     <>
-      <h1>Sampler</h1>
-      <canvas width="1000" height="300">
-        canvas
-      </canvas>
-      <div>
-        <button onClick={record}>record</button>
-        <button onClick={stop}>stop</button>
-        <button onClick={play}>play</button>
-      </div>
       <div>
         {samplerProps.map((sp, i) => {
           return (
-            <Sampler key={i} ctx={ctx} {...sp} gainNode={recorder.gainNode} />
+            <Sampler key={i} ctx={ctx} {...sp} gainNode={gainNode} />
           );
         })}
       </div>

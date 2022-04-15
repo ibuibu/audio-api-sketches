@@ -1,6 +1,6 @@
 export class Recorder {
   ctx: AudioContext;
-  audioData: Float32Array[];
+  public audioData: Float32Array[];
   gainNode: GainNode;
   static BUFFER_SIZE = 1024;
   private readonly scriptProcessor: ScriptProcessorNode;
@@ -56,48 +56,6 @@ export class Recorder {
     audioBufferSourceNode.connect(this.ctx.destination);
     audioBufferSourceNode.loop = true;
     audioBufferSourceNode.start();
-
-    const peaks = getPeaks(channel, 1000);
-    drawWaveform(peaks);
   }
 }
 
-const drawWaveform = (peaks: number[]): void => {
-  const canvas = document.querySelector("canvas");
-  if (canvas == null) return;
-  const c = canvas!.getContext("2d");
-  if (c == null) return;
-  c.clearRect(0, 0, canvas.width, canvas.height);
-  c.fillStyle = "black";
-  for (let i = 0; i < peaks.length; i++) {
-    c.fillRect(i, 150, 1, peaks[i] * 100);
-    c.fillRect(i, 150, 1, peaks[i] * -100);
-  }
-};
-
-function getPeaks(array: Float32Array, peakLength: number): number[] {
-  let step;
-  if (!peakLength) {
-    peakLength = 9000;
-  }
-
-  step = Math.floor(array.length / peakLength);
-
-  if (step < 1) {
-    step = 1;
-  }
-  let peaks = [];
-  for (let i = 0, len = array.length; i < len; i += step) {
-    const peak = getPeak(array, i, i + step);
-    peaks.push(peak);
-  }
-  return peaks;
-}
-
-function getPeak(array: Float32Array, startIndex: number, endIndex: number) {
-  const slicedArray = array.slice(startIndex, endIndex);
-  const peak = slicedArray.reduce((a, b) => {
-    return Math.max(a, b);
-  });
-  return peak;
-}
