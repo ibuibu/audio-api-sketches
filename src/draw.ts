@@ -1,3 +1,5 @@
+import { BUFFER_SIZE } from "./config";
+
 export function drawBuffer(
   canvas: HTMLCanvasElement,
   bufferNode: AudioBufferSourceNode
@@ -16,7 +18,7 @@ export function drawBufferFromAudioData(
   canvas: HTMLCanvasElement,
   audioData: Float32Array[]
 ) {
-  const BUFFER_SIZE = 1024;
+  if (audioData.length === 0) return;
   const buf = ctx.createBuffer(
     1,
     audioData.length * BUFFER_SIZE,
@@ -33,6 +35,12 @@ export function drawBufferFromAudioData(
   audioBufferSourceNode.buffer = buf;
 
   drawFromChannel(canvas, channel);
+}
+
+export function clearCanvas(canvas: HTMLCanvasElement) {
+  const c = canvas.getContext("2d");
+  if (c == null) return;
+  c.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function drawFromChannel(canvas: HTMLCanvasElement, channel: Float32Array) {

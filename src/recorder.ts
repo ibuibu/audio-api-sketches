@@ -1,9 +1,13 @@
+import { createAudioBuffer } from "./util";
+import { BUFFER_SIZE } from "./config";
+
 export class Recorder {
-  ctx: AudioContext;
+  static BUFFER_SIZE = BUFFER_SIZE;
+  private readonly ctx: AudioContext;
   public audioData: Float32Array[];
-  gainNode: GainNode;
-  static BUFFER_SIZE = 1024;
+  public gainNode: GainNode;
   private readonly scriptProcessor: ScriptProcessorNode;
+  private audioBufferSourceNode: AudioBufferSourceNode;
 
   constructor(ctx: AudioContext) {
     this.scriptProcessor = ctx.createScriptProcessor(
@@ -14,6 +18,7 @@ export class Recorder {
     this.ctx = ctx;
     this.gainNode = ctx.createGain();
     this.audioData = [];
+    this.audioBufferSourceNode = ctx.createBufferSource();
   }
 
   onAudioProcess(e: AudioProcessingEvent) {
@@ -26,36 +31,34 @@ export class Recorder {
     this.audioData.push(bufferData);
   }
 
-  record() {
-    this.audioData = [];
+  startRecording() {
     this.gainNode.connect(this.scriptProcessor);
     this.scriptProcessor.onaudioprocess = this.onAudioProcess.bind(this);
     this.scriptProcessor.connect(this.ctx.destination);
   }
 
-  stop() {
+  stopRecording() {
     this.scriptProcessor.onaudioprocess = null;
   }
 
   play() {
-    const buf = this.ctx.createBuffer(
-      1,
-      this.audioData.length * Recorder.BUFFER_SIZE,
-      this.ctx.sampleRate
-    );
-    const channel = buf.getChannelData(0);
-    for (var i = 0; i < this.audioData.length; i++) {
-      for (var j = 0; j < Recorder.BUFFER_SIZE; j++) {
-        channel[i * Recorder.BUFFER_SIZE + j] = this.audioData[i][j];
-      }
-    }
-
+    if (this.audioData.length === 0) return;
+    if (this.audioBufferSourceNode.buffer != null) return;
+    const buf = createAudioBuffer(this.ctx, this.audioData);
     const audioBufferSourceNode = this.ctx.createBufferSource();
     audioBufferSourceNode.buffer = buf;
-
-    audioBufferSourceNode.connect(this.ctx.destination);
     audioBufferSourceNode.loop = true;
+    audioBufferSourceNode.connect(this.ctx.destination);
     audioBufferSourceNode.start();
+
+    this.audioBufferSourceNode = audioBufferSourceNode;
+  }
+
+  stop() {
+    this.audioBufferSourceNode.stop();
+  }
+
+  clear() {
+    this.audioData = [];
   }
 }
-

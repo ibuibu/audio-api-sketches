@@ -9,7 +9,6 @@ type PageSamplerProps = {
 export function PageSampler(props: PageSamplerProps) {
   const { ctx, gainNode } = props;
 
-  console.log("render");
   const [funcObj_0, setFuncObj_0] = useState<{ fn: () => void }>({
     fn: () => {},
   });
