@@ -57,6 +57,7 @@ export class Recorder {
   }
 
   stop() {
+    if (!this.isPlaying) return;
     this.audioBufferSourceNode.stop();
     this.isPlaying = false;
   }
