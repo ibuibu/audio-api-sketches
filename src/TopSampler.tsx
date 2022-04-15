@@ -35,7 +35,12 @@ export function TopSampler() {
   return (
     <>
       <h1>Sampler</h1>
-      <canvas ref={canvasRef} width="1000" height="300" />
+      <canvas
+        ref={canvasRef}
+        width={window.innerWidth - 20}
+        height="100"
+        style={{ border: "solid 1px" }}
+      />
       <div>
         <button onClick={startRecording}>startRecording</button>
         <button onClick={stopRecording}>stopRecording</button>
