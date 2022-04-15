@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { PageSampler } from "./PageSampler";
-import { Recorder } from "./Recorder";
+import { Recorder } from "./recorder";
 import { drawBufferFromAudioData } from "./draw";
 
 export function TopSampler() {
