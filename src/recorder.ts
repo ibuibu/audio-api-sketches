@@ -8,6 +8,7 @@ export class Recorder {
   public gainNode: GainNode;
   private readonly scriptProcessor: ScriptProcessorNode;
   private audioBufferSourceNode: AudioBufferSourceNode;
+  private isPlaying: boolean = false;
 
   constructor(ctx: AudioContext) {
     this.scriptProcessor = ctx.createScriptProcessor(
@@ -43,7 +44,7 @@ export class Recorder {
 
   play() {
     if (this.audioData.length === 0) return;
-    if (this.audioBufferSourceNode.buffer != null) return;
+    if (this.isPlaying) return;
     const buf = createAudioBuffer(this.ctx, this.audioData);
     const audioBufferSourceNode = this.ctx.createBufferSource();
     audioBufferSourceNode.buffer = buf;
@@ -52,10 +53,12 @@ export class Recorder {
     audioBufferSourceNode.start();
 
     this.audioBufferSourceNode = audioBufferSourceNode;
+    this.isPlaying = true;
   }
 
   stop() {
     this.audioBufferSourceNode.stop();
+    this.isPlaying = false;
   }
 
   clear() {
