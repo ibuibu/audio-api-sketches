@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { PageSampler } from "./PageSampler";
 import { Recorder } from "./recorder";
 import { clearCanvas, drawBufferFromAudioData } from "./draw";
-import { Heading, Box, Button, ButtonGroup } from "@chakra-ui/react";
+import { Heading, Box, Button } from "@chakra-ui/react";
 
 export function TopSampler() {
   const ctx = new AudioContext();
@@ -42,13 +42,23 @@ export function TopSampler() {
         height="100"
         style={{ border: "solid 1px" }}
       />
-      <ButtonGroup m={2}>
-        <Button onClick={startRecording}>startRecording</Button>
-        <Button onClick={stopRecording}>stopRecording</Button>
-        <Button onClick={play}>play</Button>
-        <Button onClick={stop}>stop</Button>
-        <Button onClick={clear}>clear</Button>
-      </ButtonGroup>
+      <Box flexWrap={"wrap"}>
+        <Button m="2" onClick={startRecording}>
+          startRecording
+        </Button>
+        <Button m="2" onClick={stopRecording}>
+          stopRecording
+        </Button>
+        <Button m="2" onClick={play}>
+          play
+        </Button>
+        <Button m="2" onClick={stop}>
+          stop
+        </Button>
+        <Button m="2" onClick={clear}>
+          clear
+        </Button>
+      </Box>
       <PageSampler ctx={ctx} gainNode={recorder.gainNode} />
     </Box>
   );
