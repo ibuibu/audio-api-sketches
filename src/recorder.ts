@@ -45,9 +45,8 @@ export class Recorder {
   play() {
     if (this.audioData.length === 0) return;
     if (this.isPlaying) return;
-    const buf = createAudioBuffer(this.ctx, this.audioData);
-    const audioBufferSourceNode = this.ctx.createBufferSource();
-    audioBufferSourceNode.buffer = buf;
+    const buffer = createAudioBuffer(this.ctx, this.audioData);
+    const audioBufferSourceNode = new AudioBufferSourceNode(this.ctx, { buffer });
     audioBufferSourceNode.loop = true;
     audioBufferSourceNode.connect(this.ctx.destination);
     audioBufferSourceNode.start();
