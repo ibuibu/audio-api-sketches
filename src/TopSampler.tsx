@@ -3,6 +3,8 @@ import { PageSampler } from "./PageSampler";
 import { Recorder } from "./recorder";
 import { clearCanvas, drawBufferFromAudioData } from "./draw";
 import { Heading, Box, Button } from "@chakra-ui/react";
+import { Microphone } from "./Microphone";
+import { SamplerObserver } from "./SamplerObserver";
 
 export function TopSampler() {
   const ctx = new AudioContext();
@@ -27,6 +29,12 @@ export function TopSampler() {
     recorder.stop();
   };
 
+  const truncate = () => {
+    recorder.truncate();
+    if (canvasRef.current == null) return;
+    drawBufferFromAudioData(ctx, canvasRef.current, recorder.audioData);
+  };
+
   const clear = () => {
     recorder.clear();
     if (canvasRef.current == null) return;
@@ -42,6 +50,9 @@ export function TopSampler() {
         height="100"
         style={{ border: "solid 1px" }}
       />
+
+      <Microphone ctx={ctx} gainNode={recorder.gainNode} />
+
       <Box flexWrap={"wrap"}>
         <Button m="2" onClick={startRecording}>
           startRecording
@@ -58,7 +69,11 @@ export function TopSampler() {
         <Button m="2" onClick={clear}>
           clear
         </Button>
+        <Button m="2" onClick={truncate}>
+          truncate
+        </Button>
       </Box>
+      <SamplerObserver ctx={ctx} recorder={recorder} />
       <PageSampler ctx={ctx} gainNode={recorder.gainNode} />
     </Box>
   );

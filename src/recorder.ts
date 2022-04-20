@@ -46,7 +46,9 @@ export class Recorder {
     if (this.audioData.length === 0) return;
     if (this.isPlaying) return;
     const buffer = createAudioBuffer(this.ctx, this.audioData);
-    const audioBufferSourceNode = new AudioBufferSourceNode(this.ctx, { buffer });
+    const audioBufferSourceNode = new AudioBufferSourceNode(this.ctx, {
+      buffer,
+    });
     audioBufferSourceNode.loop = true;
     audioBufferSourceNode.connect(this.ctx.destination);
     audioBufferSourceNode.start();
@@ -59,6 +61,27 @@ export class Recorder {
     if (!this.isPlaying) return;
     this.audioBufferSourceNode.stop();
     this.isPlaying = false;
+  }
+
+  truncate() {
+    let start = 0;
+    let end = this.audioData.length;
+    for (let i = 0; i < this.audioData.length; i++) {
+      if (this.audioData[i][0] !== 0) {
+        start = i;
+        break;
+      }
+    }
+    console.log("a");
+    for (let i = this.audioData.length - 1; i > start; i--) {
+      if (this.audioData[i][0] !== 0) {
+        end = i;
+        break;
+      }
+    }
+    const tmp = this.audioData.slice(start, end);
+    this.audioData = [];
+    this.audioData = tmp;
   }
 
   clear() {
