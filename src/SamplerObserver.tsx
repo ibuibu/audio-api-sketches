@@ -22,26 +22,26 @@ export function SamplerObserver(props: PropsSampler) {
   const [setting_2, setSetting_2] = useState(defaultSamplerSetting);
 
   const switchRef = useRef<HTMLInputElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const rangeRef = useRef<HTMLInputElement>(null);
 
   const settings = [setting_0, setting_1, setting_2];
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     if (switchRef.current == null) return;
-    if (inputRef.current == null) return;
+    if (rangeRef.current == null) return;
     switch (selectedIndex) {
       case 0:
         switchRef.current.checked = setting_0.isReversed;
-        inputRef.current.value = String(setting_0.speed);
+        rangeRef.current.value = String(setting_0.speed * 10);
         break;
       case 1:
         switchRef.current.checked = setting_1.isReversed;
-        inputRef.current.value = String(setting_1.speed);
+        rangeRef.current.value = String(setting_1.speed * 10);
         break;
       case 2:
         switchRef.current.checked = setting_2.isReversed;
-        inputRef.current.value = String(setting_2.speed);
+        rangeRef.current.value = String(setting_2.speed * 10);
         break;
       default:
     }
@@ -53,9 +53,9 @@ export function SamplerObserver(props: PropsSampler) {
 
   function handleForm() {
     if (switchRef.current == null) return;
-    if (inputRef.current == null) return;
+    if (rangeRef.current == null) return;
     const setting = {
-      speed: parseInt(inputRef.current.value, 10),
+      speed: parseInt(rangeRef.current.value, 10) / 10,
       isReversed: switchRef.current.checked,
     };
     switch (selectedIndex) {
@@ -72,18 +72,23 @@ export function SamplerObserver(props: PropsSampler) {
     }
   }
 
-  function test() {}
+  function test() {
+    console.log(rangeRef.current!.value);
+  }
 
   return (
     <>
       <Button onClick={test}>test</Button>
+      <canvas onTouchStart={test} />
       <Button onClick={changeCopyMode}>Assign mode</Button>
-      <p>index: {selectedIndex}</p>
       <FormControl onChange={handleForm}>
         <FormLabel>Reverse</FormLabel>
         <input type="checkbox" ref={switchRef} />
         <FormLabel>speed</FormLabel>
-        <Input ref={inputRef} />
+        <input type="range" max="30" min="1" ref={rangeRef} />
+        {rangeRef.current == null
+          ? "1"
+          : parseInt(rangeRef.current.value, 10) / 10}
       </FormControl>
       {settings.map((setting, i) => {
         return (
