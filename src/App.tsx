@@ -7,6 +7,7 @@ import { Sketch_4 } from "./Sketch_4";
 import { Sketch_5 } from "./Sketch_5";
 import { Sketch_6 } from "./Sketch_6";
 import { TopSampler } from "./TopSampler";
+import {TopCanvas} from "./TopCanvas";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/5" element={<Sketch_5 />} />
           <Route path="/6" element={<Sketch_6 />} />
           <Route path="/page-sampler" element={<TopSampler />} />
+          <Route path="/page-canvas" element={<TopCanvas />} />
         </Routes>
       </Router>
     </>

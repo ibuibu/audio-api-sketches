@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 export function Top() {
   const nums = [...Array(6).keys()].map((i) => i + 1);
@@ -12,7 +12,12 @@ export function Top() {
           </div>
         );
       })}
-            <Link to={"page-sampler"}>PageSampler</Link>
+      <div>
+        <Link to={"page-sampler"}>PageSampler</Link>
+      </div>
+      <div>
+        <Link to={"page-canvas"}>PageCanvasSampler</Link>
+      </div>
     </>
   );
 }
