@@ -1,3 +1,4 @@
+import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 type PropsSampler = {
@@ -12,6 +13,7 @@ export const CanvasSampler = (props: PropsSampler) => {
   const { ctx, char, soundFilePath, setFuncObj, gainNode } = props;
 
   const [sound, setSound] = useState<AudioBuffer>();
+  const [isSmartPhone, setIsSmartPhone] = useState<boolean>();
 
   useEffect(() => {
     const f = async () => {
@@ -20,6 +22,7 @@ export const CanvasSampler = (props: PropsSampler) => {
       setFuncObj({ fn: () => play(s) });
     };
     f();
+    setIsSmartPhone(getIsSmartPhone());
   }, []);
 
   const play = (sound: AudioBuffer) => {
@@ -41,5 +44,28 @@ export const CanvasSampler = (props: PropsSampler) => {
     return buf;
   }
 
-  return <canvas onTouchStart={handleClick} />;
+  function getIsSmartPhone(): boolean {
+    if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  return (
+    <>
+      {isSmartPhone ? (
+        <canvas
+          width="60"
+          height="60"
+          style={{ display: "inline-block", border: "solid 1px" }}
+          onTouchStart={handleClick}
+        />
+      ) : (
+        <Button m={2} onClick={handleClick}>
+          {char}
+        </Button>
+      )}
+    </>
+  );
 };
