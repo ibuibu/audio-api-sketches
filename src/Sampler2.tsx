@@ -8,6 +8,7 @@ export type SamplerSetting = {
   speed: number;
   isReversed: boolean;
   isGateOn: boolean;
+  gain: number;
   audioIndex: number;
 };
 
@@ -41,10 +42,15 @@ export const Sampler2 = (props: PropsSampler) => {
     const audioBufferSourceNode = new AudioBufferSourceNode(ctx, {
       buffer,
     });
-    audioBufferSourceNode.connect(ctx.destination);
-    audioBufferSourceNode.connect(recorder.gainNode);
+    const gainNode = ctx.createGain();
+    gainNode.gain.value = setting.gain;
+    audioBufferSourceNode.connect(gainNode);
     audioBufferSourceNode.playbackRate.value = setting.speed;
     // audioBufferSourceNode.loop = setting.isLoop;
+
+    gainNode.connect(ctx.destination);
+    gainNode.connect(recorder.gainNode);
+
     audioBufferSourceNode.start();
 
     setAudioNode(audioBufferSourceNode);

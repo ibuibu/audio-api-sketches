@@ -17,6 +17,7 @@ export function SamplerObserver(props: PropsSampler) {
       speed: 1,
       isReversed: false,
       isGateOn: false,
+      gain: 1,
       audioIndex: audioIndex,
     };
     return setting;
@@ -29,6 +30,7 @@ export function SamplerObserver(props: PropsSampler) {
 
   const switchRef = useRef<HTMLInputElement>(null);
   const gateCheckBoxRef = useRef<HTMLInputElement>(null);
+  const gainRangeRef = useRef<HTMLInputElement>(null);
   const rangeRef = useRef<HTMLInputElement>(null);
   const testRef = useRef<HTMLSelectElement>(null);
 
@@ -38,29 +40,34 @@ export function SamplerObserver(props: PropsSampler) {
   useEffect(() => {
     if (switchRef.current == null) return;
     if (gateCheckBoxRef.current == null) return;
+    if (gainRangeRef.current == null) return;
     if (rangeRef.current == null) return;
     if (testRef.current == null) return;
     switch (selectedIndex) {
       case 0:
         switchRef.current.checked = setting_0.isReversed;
+        gainRangeRef.current.value = String(setting_0.gain * 10);
         rangeRef.current.value = String(setting_0.speed * 10);
         gateCheckBoxRef.current.checked = setting_0.isGateOn;
         testRef.current.selectedIndex = setting_0.audioIndex;
         break;
       case 1:
         switchRef.current.checked = setting_1.isReversed;
+        gainRangeRef.current.value = String(setting_1.gain * 10);
         rangeRef.current.value = String(setting_1.speed * 10);
         gateCheckBoxRef.current.checked = setting_1.isGateOn;
         testRef.current.selectedIndex = setting_1.audioIndex;
         break;
       case 2:
         switchRef.current.checked = setting_2.isReversed;
+        gainRangeRef.current.value = String(setting_2.gain * 10);
         rangeRef.current.value = String(setting_2.speed * 10);
         gateCheckBoxRef.current.checked = setting_2.isGateOn;
         testRef.current.selectedIndex = setting_2.audioIndex;
         break;
       case 3:
         switchRef.current.checked = setting_3.isReversed;
+        gainRangeRef.current.value = String(setting_3.gain * 10);
         rangeRef.current.value = String(setting_3.speed * 10);
         gateCheckBoxRef.current.checked = setting_3.isGateOn;
         testRef.current.selectedIndex = setting_3.audioIndex;
@@ -72,10 +79,12 @@ export function SamplerObserver(props: PropsSampler) {
   function handleForm() {
     if (switchRef.current == null) return;
     if (gateCheckBoxRef.current == null) return;
+    if (gainRangeRef.current == null) return;
     if (rangeRef.current == null) return;
     if (testRef.current == null) return;
     const setting = {
       isReversed: switchRef.current.checked,
+      gain: parseInt(gainRangeRef.current.value, 10) / 10,
       speed: parseInt(rangeRef.current.value, 10) / 10,
       isGateOn: gateCheckBoxRef.current.checked,
       audioIndex: testRef.current.selectedIndex,
@@ -105,6 +114,11 @@ export function SamplerObserver(props: PropsSampler) {
     <>
       <Button onClick={test}>test</Button>
       <FormControl onChange={handleForm}>
+        <FormLabel>gain</FormLabel>
+        <input type="range" max="20" min="1" ref={gainRangeRef} />
+        {gainRangeRef.current == null
+          ? "1"
+          : parseInt(gainRangeRef.current.value, 10) / 10}
         <FormLabel>Reverse</FormLabel>
         <input type="checkbox" ref={switchRef} />
         <FormLabel>gate</FormLabel>
