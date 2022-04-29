@@ -32,14 +32,6 @@ export function TopCanvas() {
     forceUpdate();
   };
 
-  const play = () => {
-    recorder!.play();
-  };
-
-  const stop = () => {
-    recorder!.stop();
-  };
-
   const truncate = () => {
     recorder!.truncate();
     if (canvasRef.current == null) return;
@@ -69,12 +61,6 @@ export function TopCanvas() {
         </Button>
         <Button m="2" onClick={stopRecording}>
           stopRecording
-        </Button>
-        <Button m="2" onClick={play}>
-          play
-        </Button>
-        <Button m="2" onClick={stop}>
-          stop
         </Button>
         <Button m="2" onClick={clear}>
           clear
