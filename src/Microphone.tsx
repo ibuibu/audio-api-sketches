@@ -47,6 +47,7 @@ export function Microphone(props: MicrophoneProps) {
         ""
       ) : (
         <Select m="2" onChange={handleOnChange}>
+          <option hidden>Select Device</option>
           {devices.map((device) => {
             return (
               <option key={device.deviceId} value={device.deviceId}>
