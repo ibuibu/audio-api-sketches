@@ -3,11 +3,13 @@ import { Recorder } from "./recorder";
 import { cloneBuffer, getIsSmartPhone } from "./util";
 import { drawFromChannel } from "./draw";
 import { useState } from "react";
+import "./style.scss";
 
 export type SamplerSetting = {
   speed: number;
   isReversed: boolean;
   isGateOn: boolean;
+  isLoop: boolean;
   gain: number;
   audioIndex: number;
 };
@@ -25,6 +27,7 @@ export const Sampler2 = (props: PropsSampler) => {
   const { ctx, recorder, keyIndex, setting, setKeyIndex, canvasRef } = props;
 
   const [audioNode, setAudioNode] = useState<AudioBufferSourceNode>();
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const play = () => {
     setKeyIndex(keyIndex);
@@ -37,7 +40,18 @@ export const Sampler2 = (props: PropsSampler) => {
       buffer.getChannelData(0).reverse();
     }
 
-    if (audioNode) audioNode.stop();
+    if (audioNode) {
+      if (audioNode == null) return;
+      audioNode.stop();
+      setIsPlaying(false);
+    }
+
+    if (isPlaying && setting.isLoop) {
+      if (audioNode == null) return;
+      audioNode.stop();
+      setIsPlaying(false);
+      return;
+    }
 
     const audioBufferSourceNode = new AudioBufferSourceNode(ctx, {
       buffer,
@@ -46,12 +60,16 @@ export const Sampler2 = (props: PropsSampler) => {
     gainNode.gain.value = setting.gain;
     audioBufferSourceNode.connect(gainNode);
     audioBufferSourceNode.playbackRate.value = setting.speed;
-    // audioBufferSourceNode.loop = setting.isLoop;
+    audioBufferSourceNode.loop = setting.isLoop;
 
     gainNode.connect(ctx.destination);
     gainNode.connect(recorder.gainNode);
 
     audioBufferSourceNode.start();
+    setIsPlaying(true);
+    audioBufferSourceNode.onended = () => {
+      setIsPlaying(false);
+    };
 
     setAudioNode(audioBufferSourceNode);
 
@@ -63,12 +81,14 @@ export const Sampler2 = (props: PropsSampler) => {
     if (audioNode == null) return;
     if (!setting.isGateOn) return;
     audioNode.stop();
+    setIsPlaying(false);
   };
 
   return (
     <>
       {getIsSmartPhone() ? (
         <canvas
+          className="pad-canvas"
           width="60"
           height="60"
           style={{ display: "inline-block", border: "solid 1px" }}
