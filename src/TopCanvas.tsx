@@ -4,11 +4,11 @@ import { clearCanvas, drawBufferFromAudioData } from "./draw";
 import { Heading, Box, Button } from "@chakra-ui/react";
 import { Microphone } from "./Microphone";
 import { SamplerObserver } from "./SamplerObserver";
-import {useForceUpdate} from "./util";
+import { useForceUpdate } from "./util";
 
 const ctx = new AudioContext();
 export function TopCanvas() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [recorder, setRecorder] = useState<Recorder>();
 
   useEffect(() => {
@@ -83,7 +83,11 @@ export function TopCanvas() {
           truncate
         </Button>
       </Box>
-      {recorder ? <SamplerObserver ctx={ctx} recorder={recorder} /> : ""}
+      {canvasRef.current != null && recorder != null ? (
+        <SamplerObserver ctx={ctx} recorder={recorder} canvasRef={canvasRef} />
+      ) : (
+        ""
+      )}
     </Box>
   );
 }

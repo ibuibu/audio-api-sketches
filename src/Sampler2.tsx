@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { Recorder } from "./recorder";
 import { cloneBuffer, getIsSmartPhone } from "./util";
+import { drawFromChannel } from "./draw";
 
 export type SamplerSetting = {
   speed: number;
@@ -14,10 +15,11 @@ type PropsSampler = {
   keyIndex: number;
   setting: SamplerSetting;
   setKeyIndex: React.SetStateAction<any>;
+  canvasRef: React.RefObject<HTMLCanvasElement>;
 };
 
 export const Sampler2 = (props: PropsSampler) => {
-  const { ctx, recorder, keyIndex, setting, setKeyIndex } = props;
+  const { ctx, recorder, keyIndex, setting, setKeyIndex, canvasRef } = props;
 
   const play = () => {
     setKeyIndex(keyIndex);
@@ -38,6 +40,9 @@ export const Sampler2 = (props: PropsSampler) => {
     audioBufferSourceNode.playbackRate.value = setting.speed;
     // audioBufferSourceNode.loop = setting.isLoop;
     audioBufferSourceNode.start();
+
+    if (canvasRef.current == null) return;
+    drawFromChannel(canvasRef.current, buffer.getChannelData(0));
   };
 
   return (

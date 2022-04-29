@@ -6,10 +6,11 @@ import { Sampler2, SamplerSetting } from "./Sampler2";
 type PropsSampler = {
   ctx: AudioContext;
   recorder: Recorder;
+  canvasRef: React.RefObject<HTMLCanvasElement>;
 };
 
 export function SamplerObserver(props: PropsSampler) {
-  const { ctx, recorder } = props;
+  const { ctx, recorder, canvasRef } = props;
 
   function createSamplerSetting(audioIndex: number) {
     const setting: SamplerSetting = {
@@ -117,6 +118,7 @@ export function SamplerObserver(props: PropsSampler) {
             recorder={recorder}
             setting={setting}
             setKeyIndex={setSelectedIndex}
+            canvasRef={canvasRef}
           />
         );
       })}

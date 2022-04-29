@@ -43,7 +43,10 @@ export function clearCanvas(canvas: HTMLCanvasElement) {
   c.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function drawFromChannel(canvas: HTMLCanvasElement, channel: Float32Array) {
+export function drawFromChannel(
+  canvas: HTMLCanvasElement,
+  channel: Float32Array
+) {
   const peaks = getPeaks(channel, canvas.width - 10); // buffer
 
   const c = canvas.getContext("2d");
