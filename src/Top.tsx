@@ -13,9 +13,6 @@ export function Top() {
         );
       })}
       <div>
-        <Link to={"page-sampler"}>PageSampler</Link>
-      </div>
-      <div>
         <Link to={"page-canvas"}>PageCanvasSampler</Link>
       </div>
     </>
