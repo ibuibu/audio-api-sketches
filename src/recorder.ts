@@ -41,7 +41,7 @@ export class Recorder {
 
   public static async build(ctx: AudioContext): Promise<Recorder> {
     const recorder = new Recorder(ctx);
-    const urls = ["/kick.wav", "/snare.wav", "/hihat.wav", "/clap.wav"];
+    const urls = ["/kick.wav", "/snare.wav", "/hihat.wav", "/guitar.wav"];
     for (const url of urls) {
       recorder.audioBufferList.push({
         title: url,

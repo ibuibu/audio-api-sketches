@@ -36,6 +36,8 @@ export const Sampler2 = (props: PropsSampler) => {
       buffer.getChannelData(0).reverse();
     }
 
+    if (audioNode) audioNode.stop();
+
     const audioBufferSourceNode = new AudioBufferSourceNode(ctx, {
       buffer,
     });
