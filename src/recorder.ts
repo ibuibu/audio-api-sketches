@@ -67,7 +67,10 @@ export class Recorder {
   stopRecording() {
     this.scriptProcessor.onaudioprocess = null;
     const newData = createAudioBuffer(this.ctx, this.audioData);
-    this.audioBufferList.push({ title: "hoge", audioBuffer: newData });
+    this.audioBufferList.push({
+      title: Date.now().toString(),
+      audioBuffer: newData,
+    });
     console.log(this.audioBufferList);
   }
 

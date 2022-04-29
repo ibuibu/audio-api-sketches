@@ -4,6 +4,7 @@ import { clearCanvas, drawBufferFromAudioData } from "./draw";
 import { Heading, Box, Button } from "@chakra-ui/react";
 import { Microphone } from "./Microphone";
 import { SamplerObserver } from "./SamplerObserver";
+import {useForceUpdate} from "./util";
 
 const ctx = new AudioContext();
 export function TopCanvas() {
@@ -18,6 +19,8 @@ export function TopCanvas() {
     f();
   }, []);
 
+  const forceUpdate = useForceUpdate();
+
   const startRecording = () => {
     recorder!.startRecording();
   };
@@ -26,6 +29,7 @@ export function TopCanvas() {
     recorder!.stopRecording();
     if (canvasRef.current == null) return;
     drawBufferFromAudioData(ctx, canvasRef.current, recorder!.audioData);
+    forceUpdate();
   };
 
   const play = () => {

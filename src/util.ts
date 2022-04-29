@@ -1,3 +1,4 @@
+import {useCallback, useState} from "react";
 import { BUFFER_SIZE } from "./config";
 
 export function createAudioBuffer(
@@ -38,3 +39,10 @@ export function getIsSmartPhone(): boolean {
     return false;
   }
 }
+
+export const useForceUpdate = () => {
+  const [, forceUpdate] = useState<undefined | boolean>(undefined);
+  return useCallback(() => {
+    forceUpdate((s) => !s);
+  }, []);
+};
