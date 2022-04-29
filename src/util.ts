@@ -17,3 +17,24 @@ export function createAudioBuffer(
   }
   return buf;
 }
+
+export function cloneBuffer(ctx: AudioContext, buffer: AudioBuffer) {
+  const channelData = new Float32Array(buffer.length);
+  buffer.copyFromChannel(channelData, 0, 0);
+
+  const newBuffer = ctx.createBuffer(1, buffer.length, ctx.sampleRate);
+  const channel = newBuffer.getChannelData(0);
+  for (let i = 0; i < channelData.length; i++) {
+    channel[i] = channelData[i];
+  }
+
+  return newBuffer;
+}
+
+export function getIsSmartPhone(): boolean {
+  if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
+    return true;
+  } else {
+    return false;
+  }
+}

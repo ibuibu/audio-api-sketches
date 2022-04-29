@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { Recorder } from "./recorder";
 import { Sampler2, SamplerSetting } from "./Sampler2";
@@ -11,52 +11,64 @@ type PropsSampler = {
 export function SamplerObserver(props: PropsSampler) {
   const { ctx, recorder } = props;
 
-  const defaultSamplerSetting: SamplerSetting = {
-    speed: 1,
-    isReversed: false,
-  };
+  function createSamplerSetting(audioIndex: number) {
+    const setting: SamplerSetting = {
+      speed: 1,
+      isReversed: false,
+      audioIndex: audioIndex,
+    };
+    return setting;
+  }
 
-  const [isCopyMode, setIsCopyMode] = useState(false);
-  const [setting_0, setSetting_0] = useState(defaultSamplerSetting);
-  const [setting_1, setSetting_1] = useState(defaultSamplerSetting);
-  const [setting_2, setSetting_2] = useState(defaultSamplerSetting);
+  const [setting_0, setSetting_0] = useState(createSamplerSetting(0));
+  const [setting_1, setSetting_1] = useState(createSamplerSetting(1));
+  const [setting_2, setSetting_2] = useState(createSamplerSetting(2));
+  const [setting_3, setSetting_3] = useState(createSamplerSetting(3));
 
   const switchRef = useRef<HTMLInputElement>(null);
   const rangeRef = useRef<HTMLInputElement>(null);
+  const testRef = useRef<HTMLSelectElement>(null);
 
-  const settings = [setting_0, setting_1, setting_2];
+  const settings = [setting_0, setting_1, setting_2, setting_3];
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     if (switchRef.current == null) return;
     if (rangeRef.current == null) return;
+    if (testRef.current == null) return;
     switch (selectedIndex) {
       case 0:
         switchRef.current.checked = setting_0.isReversed;
         rangeRef.current.value = String(setting_0.speed * 10);
+        testRef.current.selectedIndex = setting_0.audioIndex;
         break;
       case 1:
         switchRef.current.checked = setting_1.isReversed;
         rangeRef.current.value = String(setting_1.speed * 10);
+        testRef.current.selectedIndex = setting_1.audioIndex;
         break;
       case 2:
         switchRef.current.checked = setting_2.isReversed;
         rangeRef.current.value = String(setting_2.speed * 10);
+        testRef.current.selectedIndex = setting_2.audioIndex;
+        break;
+      case 3:
+        switchRef.current.checked = setting_3.isReversed;
+        rangeRef.current.value = String(setting_3.speed * 10);
+        testRef.current.selectedIndex = setting_3.audioIndex;
         break;
       default:
     }
   }, [selectedIndex]);
 
-  function changeCopyMode() {
-    setIsCopyMode(!isCopyMode);
-  }
-
   function handleForm() {
     if (switchRef.current == null) return;
     if (rangeRef.current == null) return;
+    if (testRef.current == null) return;
     const setting = {
       speed: parseInt(rangeRef.current.value, 10) / 10,
       isReversed: switchRef.current.checked,
+      audioIndex: testRef.current.selectedIndex,
     };
     switch (selectedIndex) {
       case 0:
@@ -67,6 +79,9 @@ export function SamplerObserver(props: PropsSampler) {
         break;
       case 2:
         setSetting_2(setting);
+        break;
+      case 3:
+        setSetting_3(setting);
         break;
       default:
     }
@@ -79,8 +94,6 @@ export function SamplerObserver(props: PropsSampler) {
   return (
     <>
       <Button onClick={test}>test</Button>
-      <canvas onTouchStart={test} />
-      <Button onClick={changeCopyMode}>Assign mode</Button>
       <FormControl onChange={handleForm}>
         <FormLabel>Reverse</FormLabel>
         <input type="checkbox" ref={switchRef} />
@@ -89,6 +102,11 @@ export function SamplerObserver(props: PropsSampler) {
         {rangeRef.current == null
           ? "1"
           : parseInt(rangeRef.current.value, 10) / 10}
+        <select ref={testRef}>
+          {recorder.audioBufferList.map((obj, i) => {
+            return <option key={i}>{obj.title}</option>;
+          })}
+        </select>
       </FormControl>
       {settings.map((setting, i) => {
         return (
@@ -96,8 +114,6 @@ export function SamplerObserver(props: PropsSampler) {
             key={i}
             keyIndex={i}
             ctx={ctx}
-            isCopyMode={isCopyMode}
-            setIsCopyMode={setIsCopyMode}
             recorder={recorder}
             setting={setting}
             setKeyIndex={setSelectedIndex}

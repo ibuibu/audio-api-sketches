@@ -1,42 +1,49 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Recorder } from "./recorder";
 import { clearCanvas, drawBufferFromAudioData } from "./draw";
 import { Heading, Box, Button } from "@chakra-ui/react";
 import { Microphone } from "./Microphone";
 import { SamplerObserver } from "./SamplerObserver";
-import { PageCanvasSampler } from "./PageCanvasSampler";
 
+const ctx = new AudioContext();
 export function TopCanvas() {
-  const ctx = new AudioContext();
-  const recorder = new Recorder(ctx);
   const canvasRef = useRef(null);
+  const [recorder, setRecorder] = useState<Recorder>();
+
+  useEffect(() => {
+    const f = async () => {
+      const r = await Recorder.build(ctx);
+      setRecorder(r);
+    };
+    f();
+  }, []);
 
   const startRecording = () => {
-    recorder.startRecording();
+    recorder!.startRecording();
   };
 
   const stopRecording = () => {
-    recorder.stopRecording();
+    recorder!.stopRecording();
     if (canvasRef.current == null) return;
-    drawBufferFromAudioData(ctx, canvasRef.current, recorder.audioData);
+    drawBufferFromAudioData(ctx, canvasRef.current, recorder!.audioData);
   };
 
   const play = () => {
-    recorder.play();
+    recorder!.play();
   };
 
   const stop = () => {
-    recorder.stop();
+    recorder!.stop();
   };
 
   const truncate = () => {
-    recorder.truncate();
+    recorder!.truncate();
     if (canvasRef.current == null) return;
-    drawBufferFromAudioData(ctx, canvasRef.current, recorder.audioData);
+    drawBufferFromAudioData(ctx, canvasRef.current, recorder!.audioData);
   };
 
   const clear = () => {
-    recorder.clear();
+    recorder!.clear();
     if (canvasRef.current == null) return;
     clearCanvas(canvasRef.current);
   };
@@ -51,8 +58,7 @@ export function TopCanvas() {
         style={{ border: "solid 1px" }}
       />
 
-      <Microphone ctx={ctx} gainNode={recorder.gainNode} />
-
+      {recorder ? <Microphone ctx={ctx} gainNode={recorder.gainNode} /> : ""}
       <Box flexWrap={"wrap"}>
         <Button m="2" onClick={startRecording}>
           startRecording
@@ -73,8 +79,7 @@ export function TopCanvas() {
           truncate
         </Button>
       </Box>
-      <SamplerObserver ctx={ctx} recorder={recorder} />
-      <PageCanvasSampler ctx={ctx} gainNode={recorder.gainNode} />
+      {recorder ? <SamplerObserver ctx={ctx} recorder={recorder} /> : ""}
     </Box>
   );
 }
