@@ -119,23 +119,19 @@ export function SamplerObserver(props: PropsSampler) {
     <>
       <form onChange={handleForm}>
         <div className="control-parts">
+          <span className="control-parts-label">Sample</span>
+          <select ref={testRef}>
+            {recorder.audioBufferList.map((obj, i) => {
+              return <option key={i}>{obj.title}</option>;
+            })}
+          </select>
+        </div>
+        <div className="control-parts">
           <span className="control-parts-label">Gain</span>
           <input type="range" max="20" min="1" ref={gainRangeRef} />
           {gainRangeRef.current == null
             ? "1"
             : parseInt(gainRangeRef.current.value, 10) / 10}
-        </div>
-        <div className="control-parts">
-          <span className="control-parts-label">Reverse</span>
-          <input type="checkbox" ref={switchRef} />
-        </div>
-        <div className="control-parts">
-          <span className="control-parts-label">Gate</span>
-          <input type="checkbox" ref={gateCheckBoxRef} />
-        </div>
-        <div className="control-parts">
-          <span className="control-parts-label">Loop</span>
-          <input type="checkbox" ref={loopCheckBoxRef} />
         </div>
         <div className="control-parts">
           <span className="control-parts-label">Speed</span>
@@ -144,13 +140,19 @@ export function SamplerObserver(props: PropsSampler) {
             ? "1"
             : parseInt(rangeRef.current.value, 10) / 10}
         </div>
-        <div className="control-parts">
-          <span className="control-parts-label">Sample</span>
-          <select ref={testRef}>
-            {recorder.audioBufferList.map((obj, i) => {
-              return <option key={i}>{obj.title}</option>;
-            })}
-          </select>
+        <div className="checks">
+          <div className="control-parts">
+            <span className="control-parts-label">Reverse</span>
+            <input type="checkbox" ref={switchRef} />
+          </div>
+          <div className="control-parts">
+            <span className="control-parts-label">Gate</span>
+            <input type="checkbox" ref={gateCheckBoxRef} />
+          </div>
+          <div className="control-parts">
+            <span className="control-parts-label">Loop</span>
+            <input type="checkbox" ref={loopCheckBoxRef} />
+          </div>
         </div>
       </form>
       <div className="pads">

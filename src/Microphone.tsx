@@ -1,4 +1,3 @@
-import { Select } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 type MicrophoneProps = {
@@ -46,16 +45,19 @@ export function Microphone(props: MicrophoneProps) {
       {devices == null ? (
         ""
       ) : (
-        <Select m="2" onChange={handleOnChange}>
-          <option hidden>Select Device</option>
-          {devices.map((device) => {
-            return (
-              <option key={device.deviceId} value={device.deviceId}>
-                {device.label}
-              </option>
-            );
-          })}
-        </Select>
+        <div>
+          <span className="control-parts-label">Input Device</span>
+          <select className="select" onChange={handleOnChange}>
+            <option hidden>Select Device</option>
+            {devices.map((device) => {
+              return (
+                <option key={device.deviceId} value={device.deviceId}>
+                  {device.label}
+                </option>
+              );
+            })}
+          </select>
+        </div>
       )}
     </>
   );

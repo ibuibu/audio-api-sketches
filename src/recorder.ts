@@ -13,6 +13,8 @@ export class Recorder {
   public audioData: Float32Array[];
   public gainNode: GainNode;
   private readonly scriptProcessor: ScriptProcessorNode;
+  private audioBufferSourceNode: AudioBufferSourceNode;
+  private isPlaying: boolean = false;
 
   constructor(ctx: AudioContext) {
     this.scriptProcessor = ctx.createScriptProcessor(
@@ -24,6 +26,7 @@ export class Recorder {
     this.gainNode = ctx.createGain();
     this.audioData = [];
     this.audioBufferList = [];
+    this.audioBufferSourceNode = ctx.createBufferSource();
   }
 
   onAudioProcess(e: AudioProcessingEvent) {
@@ -68,7 +71,28 @@ export class Recorder {
       title: Date.now().toString(),
       audioBuffer: newData,
     });
-    console.log(this.audioBufferList);
+    this.clear();
+  }
+
+  play() {
+    if (this.audioData.length === 0) return;
+    if (this.isPlaying) return;
+    const buffer = createAudioBuffer(this.ctx, this.audioData);
+    const audioBufferSourceNode = new AudioBufferSourceNode(this.ctx, {
+      buffer,
+    });
+    audioBufferSourceNode.loop = true;
+    audioBufferSourceNode.connect(this.ctx.destination);
+    audioBufferSourceNode.start();
+
+    this.audioBufferSourceNode = audioBufferSourceNode;
+    this.isPlaying = true;
+  }
+
+  stop() {
+    if (!this.isPlaying) return;
+    this.audioBufferSourceNode.stop();
+    this.isPlaying = false;
   }
 
   truncate() {

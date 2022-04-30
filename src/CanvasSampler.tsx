@@ -1,5 +1,5 @@
-import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import "./style.scss";
 
 type PropsSampler = {
   ctx: AudioContext;
@@ -62,9 +62,9 @@ export const CanvasSampler = (props: PropsSampler) => {
           onTouchStart={handleClick}
         />
       ) : (
-        <Button m={2} onClick={handleClick}>
+        <button className="btn" onClick={handleClick}>
           {char}
-        </Button>
+        </button>
       )}
     </>
   );

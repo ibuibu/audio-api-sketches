@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Recorder } from "./recorder";
 import { clearCanvas, drawBufferFromAudioData } from "./draw";
-import { Heading, Box, Button } from "@chakra-ui/react";
 import { Microphone } from "./Microphone";
 import { SamplerObserver } from "./SamplerObserver";
 import { useForceUpdate } from "./util";
@@ -10,6 +9,7 @@ const ctx = new AudioContext();
 export function TopCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [recorder, setRecorder] = useState<Recorder>();
+  const [isRecording, setIsRecording] = useState<boolean>(false);
 
   useEffect(() => {
     const f = async () => {
@@ -22,10 +22,12 @@ export function TopCanvas() {
   const forceUpdate = useForceUpdate();
 
   const startRecording = () => {
+    setIsRecording(true);
     recorder!.startRecording();
   };
 
   const stopRecording = () => {
+    setIsRecording(false);
     recorder!.stopRecording();
     if (canvasRef.current == null) return;
     drawBufferFromAudioData(ctx, canvasRef.current, recorder!.audioData);
@@ -44,36 +46,33 @@ export function TopCanvas() {
     clearCanvas(canvasRef.current);
   };
 
+  console.log("window.innerWidth:", window.innerWidth);
   return (
-    <Box m={2}>
-      <Heading>Sampler</Heading>
+    <div className="container">
       <canvas
         ref={canvasRef}
-        width={window.innerWidth - 20}
+        width={window.innerWidth - 40}
         height="100"
         style={{ border: "solid 1px" }}
       />
 
       {recorder ? <Microphone ctx={ctx} gainNode={recorder.gainNode} /> : ""}
-      <Box flexWrap={"wrap"}>
-        <Button m="2" onClick={startRecording}>
-          startRecording
-        </Button>
-        <Button m="2" onClick={stopRecording}>
-          stopRecording
-        </Button>
-        <Button m="2" onClick={clear}>
-          clear
-        </Button>
-        <Button m="2" onClick={truncate}>
-          truncate
-        </Button>
-      </Box>
+      <div>
+        {isRecording ? (
+          <button className="btn" onClick={stopRecording}>
+            Stop
+          </button>
+        ) : (
+          <button className="btn" onClick={startRecording}>
+            Record
+          </button>
+        )}
+      </div>
       {canvasRef.current != null && recorder != null ? (
         <SamplerObserver ctx={ctx} recorder={recorder} canvasRef={canvasRef} />
       ) : (
         ""
       )}
-    </Box>
+    </div>
   );
 }

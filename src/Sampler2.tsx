@@ -1,4 +1,3 @@
-import { Button } from "@chakra-ui/react";
 import { Recorder } from "./recorder";
 import { cloneBuffer, getIsSmartPhone } from "./util";
 import { drawFromChannel } from "./draw";
@@ -89,16 +88,14 @@ export const Sampler2 = (props: PropsSampler) => {
       {getIsSmartPhone() ? (
         <canvas
           className="pad-canvas"
-          width="60"
-          height="60"
           style={{ display: "inline-block", border: "solid 1px" }}
           onTouchStart={play}
           onTouchEnd={stop}
         />
       ) : (
-        <Button m={2} onClick={play}>
+        <button className="btn" onClick={play}>
           {keyIndex}
-        </Button>
+        </button>
       )}
     </>
   );
